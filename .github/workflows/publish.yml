@@ -28,12 +28,15 @@ jobs:
         echo "NEW_VERSION=$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)" >> $GITHUB_ENV
 
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package -s $GITHUB_WORKSPACE/settings.xml --file pom.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        GITHUB_USERNAME: ${{ github.actor }}
 
     - name: Publish to GitHub Packages
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
-        GITHUB_TOKEN:    ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         GITHUB_USERNAME: ${{ github.actor }}
 
     - name: Commit Version Bump
