@@ -30,13 +30,13 @@ jobs:
     - name: Build with Maven
       run: mvn -B package -s $GITHUB_WORKSPACE/settings.xml --file pom.xml
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        GH_READ_TOKEN: ${{ secrets.GH_PAT }}
         GITHUB_USERNAME: ${{ github.actor }}
 
     - name: Publish to GitHub Packages
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_USERNAME: ${{ github.actor }}
 
     - name: Commit Version Bump
