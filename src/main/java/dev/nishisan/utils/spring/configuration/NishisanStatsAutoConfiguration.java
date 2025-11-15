@@ -7,12 +7,26 @@ import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Auto-configuration class that configures beans related to {@link StatsUtils} based on the application's
+ * classpath and configuration properties. This configuration is only active in servlet-based web applications
+ * and when the property "nishi.utils.stats.enabled" is explicitly set to "true".
+ *
+ * The configuration supports two modes:
+ * 1. Without metrics: Configures {@link StatsUtils} if the Micrometer's {@code MeterRegistry} is not present
+ *    on the classpath.
+ * 2. With metrics: Configures {@link StatsUtils} integrated with a {@code MeterRegistry} if it is present
+ *    on the classpath and registered as a bean in the application context.
+ *
+ * Beans created through this configuration automatically start an internal thread to handle statistics
+ * operations.
+ */
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnProperty(
         name = "nishi.utils.stats.enabled",     // O nome da propriedade
         havingValue = "true",                   // Só ative se o valor for "true"
-        matchIfMissing = false                  // ❗ ESSENCIAL: Se a propriedade não existir, considere como "true" (ativado por padrão)
+        matchIfMissing = false                  // ❗ ESSENCIAL: Se a propriedade não existir, considere como "false" (ativado por padrão)
 )
 public class NishisanStatsAutoConfiguration {
 
