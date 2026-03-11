@@ -30,13 +30,22 @@ public class StatsUtilsMetricBind implements IStatsListener {
     }
 
     @Override
+    public void onAverageCounterValueAdded(FixedSizeList fixedSizeList) {
+        // No-op: the gauge reads the current average directly from the same list instance.
+    }
+
+    @Override
+    public void onCurrentValueCounterUpdated(SimpleValueDTO simpleValueDTO) {
+        // No-op: the gauge reads the current value directly from the same DTO instance.
+    }
+
+    @Override
     public void onCurrentValueCounterCreated(SimpleValueDTO simpleValueDTO) {
         Meter gauge = Gauge.builder(simpleValueDTO.getName(), simpleValueDTO, SimpleValueDTO::getValue)
                 .description(simpleValueDTO.getName())
                 .register(meterRegistry);
 
     }
-
     @Override
     public void onHitCounterIncremented(HitCounterDTO hitCounterDTO) {
         if (counters.containsKey(hitCounterDTO.getName())) {
