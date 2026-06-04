@@ -6,7 +6,6 @@ import dev.nishisan.utils.stats.dto.SimpleValueDTO;
 import dev.nishisan.utils.stats.list.FixedSizeList;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
-import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class StatsUtilsMetricBind implements IStatsListener<Long> {
 
     @Override
     public void onAverageCounterCreated(FixedSizeList<Long> fixedSizeList) {
-        Meter gauge = Gauge.builder(fixedSizeList.getName(), fixedSizeList, FixedSizeList::getAverage)
+        Gauge.builder(fixedSizeList.getName(), fixedSizeList, FixedSizeList::getAverage)
                 .description(fixedSizeList.getName())
                 .register(meterRegistry);
     }
@@ -41,7 +40,7 @@ public class StatsUtilsMetricBind implements IStatsListener<Long> {
 
     @Override
     public void onCurrentValueCounterCreated(SimpleValueDTO simpleValueDTO) {
-        Meter gauge = Gauge.builder(simpleValueDTO.getName(), simpleValueDTO, SimpleValueDTO::getValue)
+        Gauge.builder(simpleValueDTO.getName(), simpleValueDTO, SimpleValueDTO::getValue)
                 .description(simpleValueDTO.getName())
                 .register(meterRegistry);
 
@@ -55,7 +54,7 @@ public class StatsUtilsMetricBind implements IStatsListener<Long> {
 
     @Override
     public void onHitCounterCreated(HitCounterDTO hitCounterDTO) {
-        Meter gauge = Gauge.builder(hitCounterDTO.getName(), hitCounterDTO, HitCounterDTO::getRate)
+        Gauge.builder(hitCounterDTO.getName(), hitCounterDTO, HitCounterDTO::getRate)
                 .description(hitCounterDTO.getName())
                 .register(meterRegistry);
         Counter counter = Counter.builder(hitCounterDTO.getName())
