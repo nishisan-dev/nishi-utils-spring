@@ -6,7 +6,7 @@
 
     <groupId>dev.nishisan</groupId>
     <artifactId>nishi-utils-spring</artifactId>
-    <version>1.0.3</version>
+    <version>2.0.0</version>
     <distributionManagement>
         <repository>
             <id>github</id>
@@ -18,7 +18,7 @@
         <repository>
             <id>github-utils</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/nishisan-dev/nishisan-utils</url>
+            <url>https://maven.pkg.github.com/nishisan-dev/nishi-utils</url>
         </repository>
     </repositories>
     <dependencyManagement>
@@ -36,8 +36,8 @@
     <dependencies>
         <dependency>
             <groupId>dev.nishisan</groupId>
-            <artifactId>nishi-utils</artifactId>
-            <version>3.2.0</version>
+            <artifactId>nishi-utils-core</artifactId>
+            <version>4.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -49,12 +49,41 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>25</maven.compiler.release>
         <spring-boot.version>3.5.6</spring-boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.4</version>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
