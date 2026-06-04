@@ -33,7 +33,7 @@ extras (smoke test, higiene de genéricos, alinhar URL do repositório).
 
 ## Mudanças por arquivo
 
-### 1. `pom.xml` — `/home/lucas/Projects/nishisan/nishi-utils-spring/pom.xml`
+### 1. `pom.xml`
 - **Versão (linha 9):** `1.0.3` → `2.0.0`.
 - **Dependência (linhas 37-41):** `artifactId` `nishi-utils` → `nishi-utils-core`;
   `version` `3.2.0` → `4.0.0` (groupId `dev.nishisan` permanece).
@@ -50,11 +50,11 @@ extras (smoke test, higiene de genéricos, alinhar URL do repositório).
   (sem versão — vem do BOM já importado).
 - `<distributionManagement>` (publica em `nishi-utils-spring`) permanece inalterado.
 
-### 2. CI — `/home/lucas/Projects/nishisan/nishi-utils-spring/.github/workflows/publish.yml`
+### 2. CI — `.github/workflows/publish.yml`
 - Linhas 18-22: `name: Set up JDK 21` → `JDK 25`; `java-version: '21'` → `'25'`.
   `distribution: temurin` mantém. (Validar no merge que Temurin 25 GA está no `setup-java@v4`.)
 
-### 3. Qodana — `/home/lucas/Projects/nishisan/nishi-utils-spring/qodana.yaml`
+### 3. Qodana — `qodana.yaml`
 - `projectJDK: "21"` → `"25"`. Se a imagem `qodana-jvm-community:2025.2` não suportar JDK 25,
   isso afeta apenas a análise estática (não o build Maven) — item de baixa prioridade.
 
@@ -70,13 +70,15 @@ extras (smoke test, higiene de genéricos, alinhar URL do repositório).
 - A auto-config é `@ConditionalOnWebApplication(SERVLET)` + `@ConditionalOnProperty(nishi.utils.stats.enabled=true)`.
   Usar **`WebApplicationContextRunner`** (satisfaz a condição SERVLET), com
   `.withPropertyValues("nishi.utils.stats.enabled=true")` e
-  `.withUserConfiguration(NishisanStatsAutoConfiguration.class)`.
+  `.withConfiguration(AutoConfigurations.of(NishisanStatsAutoConfiguration.class))`
+  (registrar como auto-configuration garante que o `@ConditionalOnBean(MeterRegistry)`
+  enxergue o registry de usuário).
 - **Caso coberto:** com um `SimpleMeterRegistry` registrado via `.withBean(...)`, asseverar que
   o bean `statsUtils` existe (caminho `statsUtilsWithMetrics`). `SimpleMeterRegistry` vem do
   micrometer-core (disponível em teste via actuator `provided`).
 - **Observação realista:** o caminho `statsUtilsNoMetrics` (`@ConditionalOnMissingClass(MeterRegistry)`)
   é inviável de simular sem classloader filtrante — cobrir apenas o caminho com `MeterRegistry`.
-- O `ApplicationContextRunner` fecha o contexto automaticamente, evitando vazar a thread iniciada
+- O `WebApplicationContextRunner` fecha o contexto automaticamente, evitando vazar a thread iniciada
   por `startStatsThread()`.
 
 ---
@@ -101,7 +103,7 @@ Mensagens na voz do time, sem referências a agente.
 JDK 25 já é o default do `mvn` neste ambiente (`Java version: 25.0.3`).
 
 ```bash
-cd /home/lucas/Projects/nishisan/nishi-utils-spring
+# a partir da raiz do repositório
 mvn -v                                  # confirmar Java 25.0.3
 mvn clean verify                        # compila em release 25 + roda o smoke test
 mvn dependency:tree | grep -i nishi     # deve mostrar nishi-utils-core:4.0.0 e NÃO nishi-utils:3.2.0
@@ -115,8 +117,7 @@ Critérios de aceite:
 - Classes do projeto em bytecode 69.
 - Em CI: `mvn deploy` publica em `nishi-utils-spring` (GitHub Packages) rodando sob JDK 25.
 
-Após aprovação, copiar este plano para `/home/lucas/Projects/nishisan/nishi-utils-spring/planning/`
-(criar a pasta se não existir), conforme diretriz do projeto.
+Este plano já está versionado em `planning/`, conforme diretriz do projeto.
 
 ---
 
