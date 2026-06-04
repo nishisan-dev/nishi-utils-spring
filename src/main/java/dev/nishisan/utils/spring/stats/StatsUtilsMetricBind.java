@@ -12,7 +12,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StatsUtilsMetricBind implements IStatsListener {
+public class StatsUtilsMetricBind implements IStatsListener<Long> {
 
     private final MeterRegistry meterRegistry;
 
@@ -23,14 +23,14 @@ public class StatsUtilsMetricBind implements IStatsListener {
     }
 
     @Override
-    public void onAverageCounterCreated(FixedSizeList fixedSizeList) {
+    public void onAverageCounterCreated(FixedSizeList<Long> fixedSizeList) {
         Meter gauge = Gauge.builder(fixedSizeList.getName(), fixedSizeList, FixedSizeList::getAverage)
                 .description(fixedSizeList.getName())
                 .register(meterRegistry);
     }
 
     @Override
-    public void onAverageCounterValueAdded(FixedSizeList fixedSizeList) {
+    public void onAverageCounterValueAdded(FixedSizeList<Long> fixedSizeList) {
         // No-op: the gauge reads the current average directly from the same list instance.
     }
 
