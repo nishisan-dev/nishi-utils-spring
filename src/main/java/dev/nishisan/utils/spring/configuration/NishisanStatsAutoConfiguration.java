@@ -3,16 +3,16 @@ package dev.nishisan.utils.spring.configuration;
 import dev.nishisan.utils.spring.stats.StatsUtilsMetricBind;
 import dev.nishisan.utils.stats.StatsUtils;
 import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnProperty(
         name = "nishi.utils.stats.enabled",     // O nome da propriedade
         havingValue = "true",                   // Só ative se o valor for "true"
-        matchIfMissing = false                  // ❗ ESSENCIAL: Se a propriedade não existir, considere como "true" (ativado por padrão)
+        matchIfMissing = false                  // Desativado por padrão: só ativa quando a propriedade for "true"
 )
 public class NishisanStatsAutoConfiguration {
 
